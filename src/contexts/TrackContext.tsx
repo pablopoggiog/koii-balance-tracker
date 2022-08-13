@@ -8,6 +8,10 @@ import {
   LINK_MAINNET_ADDRESS,
   USDT_MAINNET_ADDRESS
 } from "src/constants";
+import {
+  getAddressesInitialState,
+  setAddressesInLocalStorage
+} from "src/utils";
 
 declare global {
   interface Window {
@@ -44,12 +48,20 @@ interface TrackContextProviderProps {
 export const TrackContextProvider: FC<TrackContextProviderProps> = ({
   children
 }) => {
+  const addressesInitialState = getAddressesInitialState();
+
   const [provider, setProvider] = useState<InfuraProvider>();
-  const [addressesToTrack, setAddressesToTrack] = useState<string[]>([]);
+  const [addressesToTrack, setAddressesToTrack] = useState<string[]>(
+    addressesInitialState
+  );
   const [balances, setBalances] = useState<Balance[]>([]);
 
   const addNewAddress = (newAddress: string) => {
-    setAddressesToTrack((addresses) => [...addresses, newAddress]);
+    setAddressesToTrack((addresses) => {
+      const newState = [...addresses, newAddress];
+      setAddressesInLocalStorage(newState);
+      return newState;
+    });
   };
 
   const connectWithProvider = useCallback(() => {
