@@ -19,7 +19,13 @@ type InfuraProvider = providers.InfuraProvider;
 
 export const TrackContext = createContext({});
 
-export const TrackContextProvider: FC = () => {
+interface TrackContextProviderProps {
+  children: React.ReactNode;
+}
+
+export const TrackContextProvider: FC<TrackContextProviderProps> = ({
+  children
+}) => {
   const [provider, setProvider] = useState<InfuraProvider>();
 
   const connectWithProvider = useCallback(() => {
@@ -70,5 +76,5 @@ export const TrackContextProvider: FC = () => {
     }
   }, [provider, getBalances]);
 
-  return <TrackContext.Provider value={{}}></TrackContext.Provider>;
+  return <TrackContext.Provider value={{}}>{children}</TrackContext.Provider>;
 };
