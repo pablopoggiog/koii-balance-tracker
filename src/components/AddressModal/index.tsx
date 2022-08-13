@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, useEffect, FC } from "react";
 import Modal from "react-modal";
+import { useTrack } from "src/hooks";
 import CheckIcon from "src/assets/check.svg";
 import {
   Title,
@@ -19,10 +20,17 @@ interface AddressModalProps {
 export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
   const [address, setAddress] = useState("");
 
+  const { addNewAddress } = useTrack();
+
   const onAddressChange = ({
     target: { value }
   }: ChangeEvent<HTMLInputElement>) => {
     setAddress(value);
+  };
+
+  const onCheckButtonClick = () => {
+    addNewAddress(address);
+    closeModal();
   };
 
   useEffect(() => {
@@ -44,7 +52,7 @@ export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
           value={address}
           onChange={onAddressChange}
         />
-        <Button onClick={closeModal}>
+        <Button onClick={onCheckButtonClick}>
           <Check src={CheckIcon} />
         </Button>
       </Form>

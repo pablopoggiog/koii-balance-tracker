@@ -17,7 +17,25 @@ declare global {
 
 type InfuraProvider = providers.InfuraProvider;
 
-export const TrackContext = createContext({});
+interface Balance {
+  [address: string]: {
+    balances: {
+      LINK: string;
+      USDT: string;
+      DAI: string;
+    };
+  };
+}
+
+interface TrackContextValue {
+  addressesToTrack: string[];
+  balances: Balance[];
+  addNewAddress: (newAddress: string) => void;
+}
+
+export const TrackContext = createContext<TrackContextValue>(
+  {} as TrackContextValue
+);
 
 interface TrackContextProviderProps {
   children: React.ReactNode;
@@ -27,6 +45,12 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
   children
 }) => {
   const [provider, setProvider] = useState<InfuraProvider>();
+  const [addressesToTrack, setAddressesToTrack] = useState<string[]>([]);
+  const [balances, setBalances] = useState<Balance[]>([]);
+
+  const addNewAddress = (newAddress: string) => {
+    setAddressesToTrack((addresses) => [...addresses, newAddress]);
+  };
 
   const connectWithProvider = useCallback(() => {
     const newProvider = new providers.InfuraProvider(
@@ -62,6 +86,12 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
       ]);
 
       console.log("balances: ", balances);
+      setBalances((balances) => ({
+        ...balances,
+        [addressToTrack]: {
+          balances: { LINK: balances[0], USDT: balances[1], DAI: balances[2] }
+        }
+      }));
     },
     [getBalance]
   );
@@ -71,10 +101,18 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
   }, [connectWithProvider]);
 
   useEffect(() => {
-    if (provider) {
-      getBalances(provider, "0xf62f157be11C65E4BCF2003E3Bd77F817208AF24");
+    if (provider && addressesToTrack.length) {
+      addressesToTrack.forEach((address) => {
+        getBalances(provider, address);
+      });
     }
-  }, [provider, getBalances]);
+  }, [provider, getBalances, addressesToTrack]);
 
-  return <TrackContext.Provider value={{}}>{children}</TrackContext.Provider>;
+  return (
+    <TrackContext.Provider
+      value={{ addressesToTrack, balances, addNewAddress }}
+    >
+      {children}
+    </TrackContext.Provider>
+  );
 };
