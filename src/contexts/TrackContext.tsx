@@ -21,14 +21,15 @@ declare global {
 
 type InfuraProvider = providers.InfuraProvider;
 
+type Token = "LINK" | "USDT" | "DAI";
+
+interface TokenBalance {
+  amount: string;
+  token: Token;
+}
+
 interface Balance {
-  [address: string]: {
-    balances: {
-      LINK: string;
-      USDT: string;
-      DAI: string;
-    };
-  };
+  [address: string]: [TokenBalance, TokenBalance, TokenBalance];
 }
 
 interface TrackContextValue {
@@ -91,18 +92,20 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
 
   const getBalancesForAddress = useCallback(
     async (provider: InfuraProvider, addressToTrack: string) => {
-      const balances = await Promise.all([
+      const balancesForAddress = await Promise.all([
         getBalance(provider, addressToTrack, LINK_MAINNET_ADDRESS),
         getBalance(provider, addressToTrack, USDT_MAINNET_ADDRESS),
         getBalance(provider, addressToTrack, DAI_MAINNET_ADDRESS)
       ]);
 
-      console.log("balances: ", balances);
+      // console.log("balances: ", balances);
       setBalances((balances) => ({
         ...balances,
-        [addressToTrack]: {
-          balances: { LINK: balances[0], USDT: balances[1], DAI: balances[2] }
-        }
+        [addressToTrack]: [
+          { amount: balancesForAddress[0], token: "LINK" },
+          { amount: balancesForAddress[1], token: "USDT" },
+          { amount: balancesForAddress[2], token: "DAI" }
+        ]
       }));
     },
     [getBalance]
@@ -111,6 +114,10 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
   useEffect(() => {
     connectWithProvider();
   }, [connectWithProvider]);
+
+  useEffect(() => {
+    console.log("balances: ", balances);
+  }, [balances]);
 
   useEffect(() => {
     let pollBalancesInterval: NodeJS.Timer;
