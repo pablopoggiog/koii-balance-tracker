@@ -1,8 +1,13 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, FC } from "react";
 import Modal from "react-modal";
-import { Title, Form, AddressInput, modalStyles } from "./styles";
+import { Title, Form, AddressInput, CloseButton, modalStyles } from "./styles";
 
-export const AddressModal = () => {
+interface AddressModalProps {
+  isOpen: boolean;
+  closeModal: () => void;
+}
+
+export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
   const [address, setAddress] = useState("");
 
   const onAddressChange = ({
@@ -18,11 +23,11 @@ export const AddressModal = () => {
   return (
     <Modal
       key="address-modal"
-      isOpen={true}
-      onRequestClose={() => {}}
+      isOpen={isOpen}
       ariaHideApp={false}
       style={modalStyles}
     >
+      <CloseButton onClick={closeModal}>X</CloseButton>
       <Title>Enter an address to track</Title>
       <Form>
         <AddressInput
