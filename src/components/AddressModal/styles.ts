@@ -27,7 +27,7 @@ export const CloseButton = styled.button`
 export const modalStyles: ModalStyles = {
   content: {
     maxWidth: "30em",
-    height: "11em",
+    height: "fit-content",
     margin: "auto",
     display: "flex",
     flexDirection: "column",
@@ -39,5 +39,6 @@ export const modalStyles: ModalStyles = {
     backgroundColor: "#282c34",
     borderRadius: "0.5em",
     textAlign: "center"
-  }
+  },
+  overlay: { background: "rgba(148,0,211,0.3)" }
 };
