@@ -89,7 +89,7 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
     []
   );
 
-  const getBalances = useCallback(
+  const getBalancesForAddress = useCallback(
     async (provider: InfuraProvider, addressToTrack: string) => {
       const balances = await Promise.all([
         getBalance(provider, addressToTrack, LINK_MAINNET_ADDRESS),
@@ -113,12 +113,21 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
   }, [connectWithProvider]);
 
   useEffect(() => {
+    let pollBalancesInterval: NodeJS.Timer;
+
     if (provider && addressesToTrack.length) {
-      addressesToTrack.forEach((address) => {
-        getBalances(provider, address);
-      });
+      const pollBalances = () => {
+        addressesToTrack.forEach((address) => {
+          getBalancesForAddress(provider, address);
+        });
+      };
+
+      pollBalances();
+      pollBalancesInterval = setInterval(pollBalances, 20000);
     }
-  }, [provider, getBalances, addressesToTrack]);
+
+    return () => clearInterval(pollBalancesInterval);
+  }, [provider, getBalancesForAddress, addressesToTrack]);
 
   return (
     <TrackContext.Provider

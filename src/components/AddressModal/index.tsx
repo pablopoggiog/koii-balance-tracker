@@ -34,10 +34,6 @@ export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
     setAddress("");
   };
 
-  useEffect(() => {
-    console.log("address", address);
-  }, [address]);
-
   return (
     <Modal
       key="address-modal"
