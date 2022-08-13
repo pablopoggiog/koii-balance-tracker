@@ -12,39 +12,17 @@ import {
   getAddressesInitialState,
   setAddressesInLocalStorage
 } from "src/utils";
-
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
-
-type InfuraProvider = providers.InfuraProvider;
-
-type Token = "LINK" | "USDT" | "DAI";
-
-interface TokenBalance {
-  amount: string;
-  token: Token;
-}
-
-interface Balance {
-  [address: string]: [TokenBalance, TokenBalance, TokenBalance];
-}
-
-interface TrackContextValue {
-  addressesToTrack: string[];
-  balances: Balance[];
-  addNewAddress: (newAddress: string) => void;
-}
+import {
+  InfuraProvider,
+  TrackContextValue,
+  Account,
+  Token,
+  TrackContextProviderProps
+} from "src/types";
 
 export const TrackContext = createContext<TrackContextValue>(
   {} as TrackContextValue
 );
-
-interface TrackContextProviderProps {
-  children: React.ReactNode;
-}
 
 export const TrackContextProvider: FC<TrackContextProviderProps> = ({
   children
@@ -55,7 +33,7 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
   const [addressesToTrack, setAddressesToTrack] = useState<string[]>(
     addressesInitialState
   );
-  const [balances, setBalances] = useState<Balance[]>([]);
+  const [trackedAccounts, setTrackedAccounts] = useState<Account[]>([]);
 
   const addNewAddress = (newAddress: string) => {
     setAddressesToTrack((addresses) => {
@@ -98,15 +76,17 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
         getBalance(provider, addressToTrack, DAI_MAINNET_ADDRESS)
       ]);
 
-      // console.log("balances: ", balances);
-      setBalances((balances) => ({
-        ...balances,
-        [addressToTrack]: [
-          { amount: balancesForAddress[0], token: "LINK" },
-          { amount: balancesForAddress[1], token: "USDT" },
-          { amount: balancesForAddress[2], token: "DAI" }
-        ]
-      }));
+      const indexedSymbols: Token[] = ["LINK", "USDT", "DAI"];
+
+      const balanceForAddress = {
+        address: addressToTrack,
+        balances: balancesForAddress.map((balance, index) => ({
+          symbol: indexedSymbols[index],
+          amount: balance
+        }))
+      };
+
+      return balanceForAddress;
     },
     [getBalance]
   );
@@ -116,17 +96,21 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
   }, [connectWithProvider]);
 
   useEffect(() => {
-    console.log("balances: ", balances);
-  }, [balances]);
+    console.log("balances: ", trackedAccounts);
+  }, [trackedAccounts]);
 
   useEffect(() => {
     let pollBalancesInterval: NodeJS.Timer;
 
     if (provider && addressesToTrack.length) {
-      const pollBalances = () => {
-        addressesToTrack.forEach((address) => {
-          getBalancesForAddress(provider, address);
-        });
+      const pollBalances = async () => {
+        const updatedAccounts = await Promise.all(
+          addressesToTrack.map(
+            async (address) => await getBalancesForAddress(provider, address)
+          )
+        );
+
+        setTrackedAccounts(updatedAccounts);
       };
 
       pollBalances();
@@ -137,9 +121,7 @@ export const TrackContextProvider: FC<TrackContextProviderProps> = ({
   }, [provider, getBalancesForAddress, addressesToTrack]);
 
   return (
-    <TrackContext.Provider
-      value={{ addressesToTrack, balances, addNewAddress }}
-    >
+    <TrackContext.Provider value={{ trackedAccounts, addNewAddress }}>
       {children}
     </TrackContext.Provider>
   );
