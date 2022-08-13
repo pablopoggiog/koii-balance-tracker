@@ -1,9 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
-import { ethers } from "ethers";
+import { providers, Contract } from "ethers";
 import {
-  INFURA_WEBSOCKETS_URL,
+  INFURA_NETWORK,
   INFURA_PROJECT_ID,
-  INFURA_NETWORK
+  ERC20_ABI,
+  DAI_MAINNET_ADDRESS,
+  LINK_MAINNET_ADDRESS,
+  USDT_MAINNET_ADDRESS
 } from "src/constants";
 
 declare global {
@@ -12,29 +15,56 @@ declare global {
   }
 }
 
-export type WebSocketProvider = ethers.providers.WebSocketProvider;
+type InfuraProvider = providers.InfuraProvider;
 
 export const useTrack = () => {
-  const [provider, setProvider] = useState<WebSocketProvider>();
+  const [provider, setProvider] = useState<InfuraProvider>();
 
   const connectWithProvider = useCallback(() => {
-    try {
-      const { ethereum } = window;
+    const newProvider = new providers.InfuraProvider(
+      INFURA_NETWORK,
+      INFURA_PROJECT_ID
+    );
 
-      if (ethereum) {
-        setProvider(
-          new ethers.providers.WebSocketProvider(
-            `${INFURA_WEBSOCKETS_URL}${INFURA_PROJECT_ID}`,
-            INFURA_NETWORK
-          )
-        );
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    setProvider(newProvider);
   }, []);
+
+  const getBalance = useCallback(
+    async (
+      provider: InfuraProvider,
+      addressToTrack: string,
+      contractAddress: string
+    ) => {
+      const contract = new Contract(contractAddress, ERC20_ABI, provider);
+      const balance = (
+        (await contract.balanceOf(addressToTrack)) / 1000000000000000000
+      ).toString();
+
+      return balance;
+    },
+    []
+  );
+
+  const getBalances = useCallback(
+    async (provider: InfuraProvider, addressToTrack: string) => {
+      const balances = await Promise.all([
+        getBalance(provider, addressToTrack, LINK_MAINNET_ADDRESS),
+        getBalance(provider, addressToTrack, USDT_MAINNET_ADDRESS),
+        getBalance(provider, addressToTrack, DAI_MAINNET_ADDRESS)
+      ]);
+
+      console.log("balances: ", balances);
+    },
+    [getBalance]
+  );
 
   useEffect(() => {
     connectWithProvider();
   }, [connectWithProvider]);
+
+  useEffect(() => {
+    if (provider) {
+      getBalances(provider, "0xf62f157be11C65E4BCF2003E3Bd77F817208AF24");
+    }
+  }, [provider, getBalances]);
 };
