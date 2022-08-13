@@ -34,37 +34,19 @@ export const modalStyles: ModalStyles = {
     flexDirection: "column",
     justifyContent: "space-around",
     alignItems: "center",
-    gap: "1em",
+    gap: "1.5em",
+    padding: "2em",
     boxSizing: "border-box",
     color: "white",
     backgroundColor: "#282c34",
     borderRadius: "0.5em",
-    textAlign: "center"
+    textAlign: "center",
+    inset: "1em"
   },
   overlay: { background: "rgba(148,0,211,0.3)" }
 };
 
-interface ButtonProps {
-  disabled?: boolean;
-}
-
-export const Button = styled.button<ButtonProps>`
-  border-radius: 0.5em;
-  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-  transition: 0.6s;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  background: white;
-  color: black;
-  margin: 1em 0;
-  box-sizing: border-box;
-  &:focus {
-    outline: 0;
-  }
-`;
-
 export const Check = styled.img`
   width: 2em;
-  height: 2.5em;
+  height: 2em;
 `;

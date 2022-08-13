@@ -1,6 +1,7 @@
-import { useState, ChangeEvent, useEffect, FC } from "react";
+import { useState, ChangeEvent, FC } from "react";
 import Modal from "react-modal";
 import { useTrack } from "src/hooks";
+import { Button } from "src/components";
 import CheckIcon from "src/assets/check.svg";
 import {
   Title,
@@ -8,7 +9,6 @@ import {
   AddressInput,
   CloseButton,
   modalStyles,
-  Button,
   Check
 } from "./styles";
 
