@@ -1,6 +1,15 @@
 import { useState, ChangeEvent, useEffect, FC } from "react";
 import Modal from "react-modal";
-import { Title, Form, AddressInput, CloseButton, modalStyles } from "./styles";
+import CheckIcon from "src/assets/check.svg";
+import {
+  Title,
+  Form,
+  AddressInput,
+  CloseButton,
+  modalStyles,
+  Button,
+  Check
+} from "./styles";
 
 interface AddressModalProps {
   isOpen: boolean;
@@ -35,6 +44,9 @@ export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
           value={address}
           onChange={onAddressChange}
         />
+        <Button onClick={closeModal}>
+          <Check src={CheckIcon} />
+        </Button>
       </Form>
     </Modal>
   );
