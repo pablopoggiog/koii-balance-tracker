@@ -31,6 +31,7 @@ export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
   const onCheckButtonClick = () => {
     addNewAddress(address);
     closeModal();
+    setAddress("");
   };
 
   useEffect(() => {
