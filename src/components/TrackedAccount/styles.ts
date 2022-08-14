@@ -10,16 +10,13 @@ export const Container = styled.div`
   padding: 2em;
   box-sizing: border-box;
   max-width: 400px;
-  background-image: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.05),
-    rgba(255, 255, 255, 0.1)
-  );
+  background-image: ${({ theme }) => theme.cardBackgroundImage};
   backdrop-filter: blur(21px);
   -webkit-backdrop-filter: blur(21px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36);
-  text-shadow: 1px 1px #32cfd1a7, -1px -1px #e1a8f0;
+  text-shadow: ${({ theme }) => theme.textShadow};
   margin: auto;
+  color: ${({ theme }) => theme.text};
 `;
 
 export const Address = styled.p`
@@ -36,7 +33,8 @@ export const BalancesContainer = styled.div`
 `;
 
 export const TokenBalance = styled.div`
-  background-color: #e5c5ee;
+  background-image: ${({ theme }) => theme.cardBackgroundImage};
+  background-color: ${({ theme }) => theme.cardBackgroundColor};
   padding: 1em;
   border-radius: 1em;
   font-weight: bold;
@@ -44,6 +42,7 @@ export const TokenBalance = styled.div`
   width: 10em;
   justify-content: space-between;
   display: flex;
+  color: ${({ theme }) => theme.text};
 `;
 
 export const Name = styled.div`
