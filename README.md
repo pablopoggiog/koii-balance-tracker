@@ -41,7 +41,7 @@ Launches the test runner in the interactive watch mode.\
 
 1. When initializing the app, it'll automatically grab and start displaying your saved addresses from local storage, if any.
 2. If you don't have yet addresses saved, there's no better time than now! Spot the "Track new address" button, and click on it.
-3. It'll open a modal, enter or paste an address there and, once you confirm it's ok, click on the ✅ button.
+3. It'll open a modal, enter or paste an address there and, once you confirm it's ok, click on the ✅ button. If the address is not a valid Ethereum address, the button to confirm won't show up and you'll see an error message explaining this.
 3. You'll notice a new card will show up on the screen. It'll display:
 
     - The address just added to be tracked
@@ -49,7 +49,6 @@ Launches the test runner in the interactive watch mode.\
     - Its USDT balance
     - Its DAI balance
     - The last time these balances were updated (it does so every 20 seconds)
-    - Timestamp (transformed to a more readable format)
 
 4. You will see as well a button on the top-right corner of the app, clicking on it wil toggle between dark and light modes. Try it out! 
 
