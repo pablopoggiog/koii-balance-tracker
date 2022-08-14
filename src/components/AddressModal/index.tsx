@@ -24,13 +24,16 @@ export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
 
   const { addNewAddress } = useTrack();
 
+  const isValidEthereumAddress = (address: string) =>
+    address.match(/^0x[a-fA-F0-9]{40}$/);
+
   const onAddressChange = ({
     target: { value }
   }: ChangeEvent<HTMLInputElement>) => {
-    if (value.match(/^0x[a-fA-F0-9]{40}$/)) {
-      setInputError(false);
-      setAddress(value);
-    } else setInputError(true);
+    setAddress(value);
+
+    if (isValidEthereumAddress(value)) setInputError(false);
+    else setInputError(true);
   };
 
   const onCheckButtonClick = () => {
@@ -54,9 +57,11 @@ export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
           value={address}
           onChange={onAddressChange}
         />
-        <Button disabled={!address} noTheme onClick={onCheckButtonClick}>
-          <Check src={CheckIcon} />
-        </Button>
+        {!inputError && (
+          <Button disabled={!address} noTheme onClick={onCheckButtonClick}>
+            <Check src={CheckIcon} />
+          </Button>
+        )}
       </Form>
       {inputError && (
         <ErrorMessage>
