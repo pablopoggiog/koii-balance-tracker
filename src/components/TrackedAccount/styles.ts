@@ -24,6 +24,11 @@ export const Address = styled.p`
   text-align: center;
   color: white;
   font-weight: bold;
+  font-size: 0.7em;
+
+  @media (min-width: 768px) {
+    font-size: 1em;
+  }
 `;
 
 export const BalancesContainer = styled.div`

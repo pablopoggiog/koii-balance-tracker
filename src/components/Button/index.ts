@@ -39,6 +39,11 @@ export const Button = styled.button<ButtonProps>`
   outline: none;
   position: relative;
   text-transform: uppercase;
+  font-size: 0.8em;
+
+  @media (min-width: 768px) {
+    font-size: 0.85em;
+  }
 
   &:focus {
     outline: 0;
