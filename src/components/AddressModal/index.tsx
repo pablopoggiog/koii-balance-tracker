@@ -49,7 +49,7 @@ export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
           value={address}
           onChange={onAddressChange}
         />
-        <Button onClick={onCheckButtonClick}>
+        <Button disabled={!address} onClick={onCheckButtonClick}>
           <Check src={CheckIcon} />
         </Button>
       </Form>
