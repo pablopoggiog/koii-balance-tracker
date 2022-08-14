@@ -15,6 +15,7 @@ export const AddressInput = styled.input`
   border-radius: 0.5em;
   height: 2.5em;
   text-align: center;
+  padding: 0.6em;
 `;
 
 export const CloseButton = styled.button`
@@ -43,7 +44,10 @@ export const modalStyles: ModalStyles = {
     textAlign: "center",
     inset: "1em"
   },
-  overlay: { background: "rgba(148,0,211,0.3)" }
+  overlay: {
+    backgroundColor: "#00DBDE",
+    backgroundImage: "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)"
+  }
 };
 
 export const Check = styled.img`
