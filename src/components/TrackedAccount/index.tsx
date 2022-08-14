@@ -3,6 +3,7 @@ import { Account } from "src/types";
 import LinkLogo from "src/assets/link.svg";
 import UsdtLogo from "src/assets/usdt.svg";
 import DaiLogo from "src/assets/dai.svg";
+import { getFormattedAmount } from "src/utils";
 import {
   Container,
   Address,
@@ -27,8 +28,6 @@ export const TrackedAccount: FC<TrackedAccountProps> = ({
   account: { address, balances }
 }) => {
   const lastUpdated = `Last updated: ${new Date().toLocaleString()}`;
-  const getFormattedAmount = (amount: string) =>
-    new Intl.NumberFormat().format(Math.round(Number(amount)));
 
   return (
     <Container>
