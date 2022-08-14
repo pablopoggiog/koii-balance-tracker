@@ -46,20 +46,6 @@ export const Button = styled.button<ButtonProps>`
     outline: 0;
   }
 
-  &::before {
-    content: "";
-    border-radius: 1000px;
-    min-width: calc(300px + 12px);
-    min-height: calc(60px + 12px);
-    border: 6px solid #00ffcb;
-    box-shadow: 0 0 60px rgba(0, 255, 203, 0.64);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    transition: all 0.3s ease-in-out 0s;
-  }
   ${({ ringAnimation }) =>
     ringAnimation &&
     css`
@@ -67,26 +53,41 @@ export const Button = styled.button<ButtonProps>`
       &:focus::before {
         opacity: 1;
       }
+
+      &::before {
+        content: "";
+        border-radius: 1000px;
+        min-width: calc(300px + 12px);
+        min-height: calc(60px + 12px);
+        border: 6px solid #00ffcb;
+        box-shadow: 0 0 60px rgba(0, 255, 203, 0.64);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: all 0.3s ease-in-out 0s;
+      }
+
+      &::after {
+        content: "";
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        border: 6px solid #00ffcb;
+        position: absolute;
+        z-index: -1;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: ${ring} 5s infinite;
+      }
     `}
 
   &:hover,
       &:focus {
     color: #313133;
     transform: translateY(-6px);
-  }
-
-  &::after {
-    content: "";
-    width: 30px;
-    height: 30px;
-    border-radius: 100%;
-    border: 6px solid #00ffcb;
-    position: absolute;
-    z-index: -1;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation: ${({ ringAnimation }) => ringAnimation && ring} 5s infinite;
   }
 
   &:hover::after,
