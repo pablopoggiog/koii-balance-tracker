@@ -10,7 +10,7 @@ interface AccountsBoardProps {
 export const AccountsBoard: FC<AccountsBoardProps> = ({ accounts }) => (
   <Container>
     {accounts?.map((account) => (
-      <TrackedAccount key={Object.keys(account)[0]} account={account} />
+      <TrackedAccount key={account.address} account={account} />
     ))}
   </Container>
 );
