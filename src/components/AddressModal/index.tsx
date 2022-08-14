@@ -9,7 +9,8 @@ import {
   AddressInput,
   CloseButton,
   modalStyles,
-  Check
+  Check,
+  ErrorMessage
 } from "./styles";
 
 interface AddressModalProps {
@@ -18,14 +19,18 @@ interface AddressModalProps {
 }
 
 export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState<string>("");
+  const [inputError, setInputError] = useState<boolean>(false);
 
   const { addNewAddress } = useTrack();
 
   const onAddressChange = ({
     target: { value }
   }: ChangeEvent<HTMLInputElement>) => {
-    setAddress(value);
+    if (value.match(/^0x[a-fA-F0-9]{40}$/)) {
+      setInputError(false);
+      setAddress(value);
+    } else setInputError(true);
   };
 
   const onCheckButtonClick = () => {
@@ -53,6 +58,11 @@ export const AddressModal: FC<AddressModalProps> = ({ isOpen, closeModal }) => {
           <Check src={CheckIcon} />
         </Button>
       </Form>
+      {inputError && (
+        <ErrorMessage>
+          It doesn't seem to be a valid Ethereum address!
+        </ErrorMessage>
+      )}
     </Modal>
   );
 };

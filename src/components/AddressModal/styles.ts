@@ -54,3 +54,9 @@ export const Check = styled.img`
   width: 2em;
   height: 2em;
 `;
+
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.6em;
+  margin: 0;
+`;
